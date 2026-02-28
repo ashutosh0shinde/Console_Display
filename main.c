@@ -4,7 +4,7 @@
 
 char screen[ROW][COL];
 int i,j;
-char offchar = '0';
+char offchar = '.';
 char onchar = '#';
 
 void resetScreen()
