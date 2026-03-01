@@ -16,6 +16,55 @@ char screen[ROW][COL];
 char offchar = '.';
 char onchar = '#';
 
+#define C_X 5
+#define C_Y 5
+char letters[2][5][5] ={
+    {
+        {'.','.','#','.','.'},
+        {'.','#','.','#','.'},
+        {'.','#','#','#','.'},
+        {'.','#','.','#','.'},
+        {'.','#','.','#','.'}
+    },
+    {
+        {'.','#','#','.','.'},
+        {'.','#','.','#','.'},
+        {'.','#','#','.','.'},
+        {'.','#','.','#','.'},
+        {'.','#','#','.','.'}
+    }
+};
+
+void drawPixel(int x, int y);
+void printChar(int ind, int st_x,int st_y)
+{
+    int i,j;
+    for(i = 0; i < C_X; i++)
+    {
+        for(j = 0; j < C_X; j++)
+        {
+            if(letters[ind][i][j] == onchar)
+            {
+                if(i+st_x <= ROW && j+st_y <= COL)
+                {
+                    drawPixel(i+st_x, j+st_y);
+                }
+                else if(i+st_x <= ROW)
+                {
+                    drawPixel(i+st_x, j+st_y-COL);
+                }
+                else if(j+st_x <= ROW)
+                {
+                    drawPixel(i+st_x-ROW, j+st_y);
+                }
+                else
+                {
+                    drawPixel(i+st_x-ROW, j+st_y-COL);
+                }
+            }
+        }
+    }
+}
 void delay(int ms)
 {
     #ifdef _WIN32
@@ -44,7 +93,7 @@ void resetScreen()
 }
 void drawPixel(int x, int y)
 {
-    screen[x-1][y-1] = onchar;
+    screen[x][y] = onchar;
 }
 void render()
 {
@@ -63,13 +112,15 @@ void render()
 int main()
 {
     resetScreen();
+    
+
     int i;
-    for(i =1;i<5;i++)
+    for(i =1;i<COL+5;i++)
     {
-        drawPixel(3,i);   
         cls();
+        resetScreen();
+        printChar(1, 2,i);
         render();    
-        delay(1000);
-        printf("\n%d",i);
+        delay(100);
     }
 }
