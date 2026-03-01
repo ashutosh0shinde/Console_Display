@@ -53,7 +53,7 @@ void printChar(int ind, int st_x,int st_y)
                 {
                     drawPixel(i+st_x, j+st_y-COL);
                 }
-                else if(j+st_x <= ROW)
+                else if(j+st_x <= COL)
                 {
                     drawPixel(i+st_x-ROW, j+st_y);
                 }
