@@ -304,6 +304,10 @@ void render()
     }
     printf("\n");
 }
+void Display(char st[13], int x, int y, char dir, int speed, int time)
+{
+    
+}
 int main()
 {
     resetScreen();
@@ -316,14 +320,16 @@ int main()
         ch[strcspn(ch,"\n")] = '\0';
     }while(strlen(ch) > 13 || strlen(ch) == 0);
 
-    int i;
-    for(i =1;i<150;i++)
-    {
-        cls();
-        resetScreen();
-        drawString(ch,2,i);
-        render();    
-        delay(20);
-    }
+    Display(ch, 2, 0, 'r', 5, 5);
+
+
+    // for(i =1;i<150;i++)
+    // {
+    //     cls();
+    //     resetScreen();
+    //     drawString(ch,2,i);
+    //     render();    
+    //     delay(20);
+    // }
     
 }
