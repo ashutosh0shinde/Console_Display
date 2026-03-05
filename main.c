@@ -14,9 +14,9 @@
 #define COL 100
 
 char screen[ROW][COL];
-char offchar = '.';
+char offchar = ' ';
 char onchar = '#';
-
+char BORDER = '.';
 //65 - A
 //90 - Z
 
@@ -210,7 +210,10 @@ char letters[26][C_X][C_Y] ={
 void drawPixel(int x, int y);
 void printChar(int ind, int st_x, int st_y);
 
-void drawString(char st[20], int x, int y)
+//mode 'l' = left scrolling
+// 'r' = right scrolling
+// 's' static
+void drawString(char st[13], int x, int y) 
 {
     int i = 0;
     while(st[i] != '\0')
@@ -230,6 +233,7 @@ void printChar(int ind, int st_x,int st_y)
         {
             if(letters[ind][i][j] == onchar)
             {
+                drawPixel((i+st_x)%ROW, (j+st_y)%COL); //correct it, may give negative values when tried moving left/up
                 // if(i+st_x < ROW && j+st_y < COL)
                 // {
                 //     drawPixel(i+st_x, j+st_y);
@@ -246,7 +250,7 @@ void printChar(int ind, int st_x,int st_y)
                 // {
                 //     drawPixel(i+st_x-ROW, j+st_y-COL);
                 // }
-                drawPixel((i+st_x)%ROW, (j+st_y)%COL); //correct it, may give negative values when tried moving left/up
+                
             }
         }
     }
@@ -289,6 +293,11 @@ void render()
     {
         for(j = 0;j<COL; j++)
         {
+            if(i == 0 || i == ROW-1 || j == 0 || j == COL-1)
+            {
+                printf("%c", BORDER);
+            }
+            else
             printf("%c",screen[i][j]);
         }
         printf("\n");
@@ -300,8 +309,12 @@ int main()
     resetScreen();
     
     char ch[20];
-    fgets(ch, sizeof(ch), stdin);
-    ch[strcspn(ch,"\n")] = '\0';
+    do
+    {
+        printf("Enter string (letters only) (max length 13): ");
+        fgets(ch, sizeof(ch), stdin);
+        ch[strcspn(ch,"\n")] = '\0';
+    }while(strlen(ch) > 13 || strlen(ch) == 0);
 
     int i;
     for(i =1;i<150;i++)
@@ -310,7 +323,7 @@ int main()
         resetScreen();
         drawString(ch,2,i);
         render();    
-        delay(12);
+        delay(20);
     }
     
 }
