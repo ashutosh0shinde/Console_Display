@@ -2,8 +2,7 @@
 #include<stdlib.h>
 #include<ctype.h>
 
-//checking the current os and importing 
-//delay functions for respective os 
+
 #ifdef _WIN32
 #include<windows.h>
 #else
@@ -233,24 +232,7 @@ void printChar(int ind, int st_x,int st_y)
         {
             if(letters[ind][i][j] == onchar)
             {
-                drawPixel((i+st_x)%ROW, (j+st_y)%COL); //correct it, may give negative values when tried moving left/up
-                // if(i+st_x < ROW && j+st_y < COL)
-                // {
-                //     drawPixel(i+st_x, j+st_y);
-                // }
-                // else if(i+st_x < ROW)
-                // {
-                //     drawPixel(i+st_x, j+st_y-COL);
-                // }
-                // else if(j+st_y < COL)
-                // {
-                //     drawPixel(i+st_x-ROW, j+st_y);
-                // }
-                // else
-                // {
-                //     drawPixel(i+st_x-ROW, j+st_y-COL);
-                // }
-                
+                drawPixel((i+st_x)%ROW, (j+st_y)%COL); //may give negative index if negative movement is hude
             }
         }
     }
@@ -258,19 +240,14 @@ void printChar(int ind, int st_x,int st_y)
 void delay(int ms)
 {
     #ifdef _WIN32
-    Sleep(ms); // for windows: ms
+    Sleep(ms); 
     #else
-    usleep(ms*1000); // for linux/macos: uf*1000 = ms
+    usleep(ms*1000); 
     #endif
 }
-void cls(){
-    // #ifdef _WIN32
-    // system("cls");
-    // #else
-    // system("clear");
-    // #endif
-    printf("\033[2J\033[H"); //moves cursor to top left, creating 
-                            // illusion of refrashing screen
+void cls()
+{
+    printf("\033[2J\033[H");
 }
 void resetScreen()
 {
@@ -304,11 +281,50 @@ void render()
     }
     printf("\n");
 }
+void Display(char st[13], int x, int y, char dir, int speed)
+{
+    speed = 10 - speed;
+    speed = speed < 1 ? 1 : speed;
+    
+    int i;
+    if(dir == 'l')
+    {
+        for(i = 100; i > 0; i--)
+        {
+            cls();
+            resetScreen();
+            drawString(st,2,i);
+            render();    
+            delay(5 * speed);
+        }
+    }
+    else if (dir == 'r')
+    {
+        for(i = 0; i < 100; i++)
+        {
+            cls();
+            resetScreen();
+            drawString(st,2,i);
+            render();    
+            delay(5 * speed);
+        }
+    }
+    else
+    {
+        cls();
+        resetScreen();
+        drawString(st,2,2);
+        render();    
+        delay(5 * speed);
+    }
+}
 int main()
 {
     resetScreen();
     
     char ch[20];
+    char dir;
+    int speed;
     do
     {
         printf("Enter string (letters only) (max length 13): ");
@@ -316,14 +332,18 @@ int main()
         ch[strcspn(ch,"\n")] = '\0';
     }while(strlen(ch) > 13 || strlen(ch) == 0);
 
-    int i;
-    for(i =1;i<150;i++)
+    printf("Enter scrolling direction (l=left, r=right, n=no scroll): ");
+    scanf(" %c",&dir);
+
+    if(dir != 'l' && dir != 'r')
     {
-        cls();
-        resetScreen();
-        drawString(ch,2,i);
-        render();    
-        delay(20);
+        Display(ch, 2, 0, dir , speed);
+        return 0;
     }
-    
+
+    printf("Enter the speed of scrolling (1 - 10): ");
+    scanf("%d",&speed);
+
+    Display(ch, 2, 0, dir , speed);
+    return 0;
 }
